@@ -9,6 +9,7 @@ import ImageTools
 
 import sys
 import Setting
+import DownBingWallpaper
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -21,14 +22,18 @@ def main():
     # 读取配置文件的信息
 
     citycode = Setting.city
-    if len(sys.argv) == 1 or len(sys.argv[1]) == 0:
-        wallpath = Setting.wallpath
+
+    if Setting.downwall:
+        wallpath = '/tmp/auw/bing_wall.jpg'
     else:
-        wallpath = sys.argv[1]
-        config = "# -*-coding:utf-8-*-\ncity = '%s'\nwallpath = '%s'" % (citycode, wallpath)
-        config_file = open('Setting.py', 'w')
-        config_file.write(config)
-        config_file.close()
+        if len(sys.argv) == 1 or len(sys.argv[1]) == 0:
+            wallpath = Setting.wallpath
+        else:
+            wallpath = sys.argv[1]
+            config = "# -*-coding:utf-8-*-\ncity = '%s'\ndownwall=%s\nwallpath = '%s'" % (citycode, 'False', wallpath)
+            config_file = open('Setting.py', 'w')
+            config_file.write(config)
+            config_file.close()
 
     # 设置请求地址与请求参数
     request_url = 'http://d1.weather.com.cn/sk_2d/%s.html?_=%s' % (citycode, int(round(time.time() * 1000)))
@@ -43,6 +48,9 @@ def main():
     result = json.loads(result)
 
     watermark = ImageTools.toWatermarkImage(result)
+
+    # 在必应下载壁纸
+    DownBingWallpaper.downNow(wallpath)
 
     new_wallpath = ImageTools.brand(wallpath, watermark)
 
