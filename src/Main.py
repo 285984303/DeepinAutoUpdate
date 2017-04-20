@@ -1,5 +1,4 @@
 # -*-coding:utf-8-*-
-import ConfigParser
 import commands
 import json
 import os
@@ -9,6 +8,7 @@ import urllib2
 import ImageTools
 
 import sys
+import Setting
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -20,17 +20,14 @@ if not os.path.isdir('/tmp/auw/'):
 def main():
     # 读取配置文件的信息
 
-    config = ConfigParser.SafeConfigParser()
-    config.read('config')
-
-    citycode = config.get('all', 'city')
+    citycode = Setting.city
     if len(sys.argv) == 1 or len(sys.argv[1]) == 0:
-        wallpath = config.get('all', 'wallpath')
+        wallpath = Setting.wallpath
     else:
         wallpath = sys.argv[1]
-        config.set('all', 'wallpath', wallpath)
-        config_file = open('config', 'w')
-        config.write(config_file)
+        config = "# -*-coding:utf-8-*-\ncity = '%s'\nwallpath = '%s'" % (citycode, wallpath)
+        config_file = open('Setting.py', 'w')
+        config_file.write(config)
         config_file.close()
 
     # 设置请求地址与请求参数

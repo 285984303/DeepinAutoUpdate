@@ -41,25 +41,27 @@ def toWatermarkImage(result):
     wrap += ad
 
     # Draw picture
-    i = Image.new("RGBA", (290, 150), (255, 255, 255, 120))
+    i = Image.new("RGBA", (290, 158), (255, 255, 255, 120))
     d = ImageDraw.Draw(i)
-
     # 输出城市信息
     d.text((20, 0), result['cityname'].decode('UTF8'), font=ImageFont.truetype("font.ttf", 72), fill=textcolor)
-
-    d.text((len(result['cityname']) * 72 + 26, 72 - 48), result['temp'].decode('UTF8'),
+    # 输出温度信息
+    d.text((len(result['cityname']) * 72 + 26, 72 - 48), ('%s℃' % result['temp']).decode('UTF8'),
            font=ImageFont.truetype("font.ttf", 48), fill=textcolor)
-    d.text((len(result['cityname']) * 72 + len(result['temp']) * 48 - 12, 72 - 32), "℃".decode("UTF8"),
-           font=ImageFont.truetype("font.ttf", 32), fill=textcolor)
-
-    d.line(((20, 85), (270, 85)), (0, 0, 0), width=2)
-
+    # 添加分隔线
+    d.line(((10, 82), (280, 82)), (0, 0, 0), width=3)
+    # 添加天气和风力信息
     msg = "%(weather)s | %(WD)s %(WS)s %(wse)s" % result
-    d.text((20, 90), msg.decode('UTF8'), font=ImageFont.truetype("font.ttf", 20), fill=textcolor)
-
+    d.text((20, 88), msg.decode('UTF8'), font=ImageFont.truetype("font.ttf", 20), fill=textcolor)
+    # 添加湿度和空气质量信息
     msg = "湿度:%(SD)s | %(WRDJ)s" % result
+    d.text((20, 111), msg.decode('UTF8'), font=ImageFont.truetype("font.ttf", 20), fill=textcolor)
+    # 添加一个灰色底色 用于衬托更新时间
+    d.line(((0, 146), (290, 146)), (220, 220, 220, 220), width=24)
 
-    d.text((20, 115), msg.decode('UTF8'), font=ImageFont.truetype("font.ttf", 20), fill=textcolor)
+    # 输出更新时间信息
+    d.text((20, 135), u'%s %s | 更新' % (result['date'].decode("UTF8"), result['time'].decode("UTF8")),
+           font=ImageFont.truetype("font.ttf", 17), fill="#000000")
 
     # Write result to a temp file
     filename = "/tmp/auw/watermark.png"
