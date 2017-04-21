@@ -1,0 +1,1 @@
+bash ~/Project/PyProject/DeepinAutoUpdate/autoUpdateWallpaperMain.sh &

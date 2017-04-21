@@ -1,1 +1,0 @@
-cd /home/adinlead/Project/PyProject/DeepinAutoUpdate/src && python Main.py && date "+%Y-%m-%d %H:%M:%S" >> /tmp/auw/dau.log
