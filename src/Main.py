@@ -30,7 +30,15 @@ def main():
             wallpath = Setting.wallpath
         else:
             wallpath = sys.argv[1]
-            config = "# -*-coding:utf-8-*-\ncity = '%s'\ndownwall=%s\nwallpath = '%s'" % (citycode, 'False', wallpath)
+            config = "# -*-coding:utf-8-*-\n" \
+                     "# 城市代码\n" \
+                     "city = '%s'\n" \
+                     "# 是否下载网络壁纸\n" \
+                     "downwall=%s\n" \
+                     "# 本地壁纸路径\n" \
+                     "wallpath = '%s'" \
+                     % (citycode, 'False', wallpath)
+
             config_file = open('Setting.py', 'w')
             config_file.write(config)
             config_file.close()
