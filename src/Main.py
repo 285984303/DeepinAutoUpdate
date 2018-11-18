@@ -28,6 +28,7 @@ def main():
     else:
         if len(sys.argv) == 1 or len(sys.argv[1]) == 0:
             wallpath = Setting.wallpath
+            print wallpath
         else:
             wallpath = sys.argv[1]
             config = "# -*-coding:utf-8-*-\n" \
@@ -44,26 +45,34 @@ def main():
             config_file.close()
 
     # 设置请求地址与请求参数
-    request_url = 'http://d1.weather.com.cn/sk_2d/%s.html?_=%s' % (citycode, int(round(time.time() * 1000)))
+    #request_url = 'http://d1.weather.com.cn/sk_2d/%s.html?_=%s' % (citycode, int(round(time.time() * 1000)))
+    #request_url = 'http://mobile.weather.com.cn/data/sk/%s.html?_=%s' % (citycode, int(round(time.time() * 1000)))
+    request_url = 'http://api.help.bj.cn/apis/weather6d/?id=%s&_=%s' % (citycode, int(round(time.time() * 1000)))
+    #request_url = 'http://www.weather.com.cn/data/sk/%s.html?_=%s' % (citycode, int(round(time.time() * 1000)))
 
     request = urllib2.Request(request_url)
-    request.add_header('referer', 'http://www.weather.com.cn/weather1d/101120101.shtml')
+    #request.add_header('referer', 'http://www.weather.com.cn/weather1d/101120101.shtml')
+    request.add_header('referer', 'http://www.weather.com.cn/data/sk/101010100.html')
     response = urllib2.urlopen(request)
 
     # 读取请求结果并转换为JSON
     result = response.read()
-    result = result.replace('var dataSK = ', '')
+    #result = result.replace('var dataSK = ', '')
+    print(result)
+    #result = result.replace('var hour3data=', '')
     result = json.loads(result)
-
+    #print(result)
     watermark = ImageTools.toWatermarkImage(result)
 
     # 在必应下载壁纸
-    DownBingWallpaper.downNow(wallpath)
-
+    if Setting.downwall:
+        DownBingWallpaper.downNow(wallpath)
+    ImageTools.changeSize(wallpath)
     new_wallpath = ImageTools.brand(wallpath, watermark)
-
-    commands.getstatusoutput("gsettings set org.gnome.desktop.background picture-uri %s" % new_wallpath)
-
+    print new_wallpath
+    #commands.getstatusoutput("gsettings set org.gnome.desktop.background picture-uri %s" % new_wallpath)
+    commands.getstatusoutput("gsettings set com.deepin.wrap.gnome.desktop.background picture-uri %s" % new_wallpath)
+    #commands.getstatusoutput('qdbus --literal com.deepin.wm /com/deepin/wm com.deepin.wm.SetTransientBackground "file://%s"' % new_wallpath)
 
 if __name__ == __name__:
     main()

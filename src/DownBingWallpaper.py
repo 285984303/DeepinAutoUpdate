@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 
 def downNow(img_save):
-    page = random.randint(1, 35)
+    page = random.randint(1, 45)
     # page = 1
 
     url = 'https://bing.ioliu.cn/?p=%s' % page
@@ -19,13 +19,14 @@ def downNow(img_save):
     # 读取请求结果并转换为JSON
     result = response.read()
     html = BeautifulSoup(result, 'lxml')
+    #print html
     html = html.select('.container')[1]
     html = html.select('.mark')
     html = html[random.randint(0, len(html) - 1)]
     img_name = html.get('href')
     img_name = img_name.replace('/photo/', '')
     img_name = img_name[:img_name.rfind('?')]
-    img_href = 'https://static.ioliu.cn/bing/%s_1920x1080.jpg' % img_name
+    img_href = 'http://h1.ioliu.cn/bing/%s_1920x1080.jpg' % img_name
 
     # 下载图片
     comm = 'wget %s -O %s' % (img_href, img_save)
